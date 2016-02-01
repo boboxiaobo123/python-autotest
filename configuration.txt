@@ -1,0 +1,30 @@
+Path
+
+Test_Result_Path = '/Users/xhou/Coursera/Python/pycurl/Test_Result'
+Expected_Result_Path = '/Users/xhou/Coursera/Python/pycurl/Expected_result'
+configuration = '/Users/xhou/Coursera/Python/pycurl/configuration.txt'
+Test_Report = '/Users/xhou/Coursera/Python/pycurl'
+
+URL
+
+IP:http://10.0.40.142:8080/;
+
+Test_Suite_Name = 'Login_Mail'
+Test_Case = 'Login_Mail_登录成功';
+'Login_Mail_登录成功' -api=usercenter-gateway/api/v1/login/mail?;
+'Login_Mail_登录成功' -parameter&mail=EB2806EE35374C31165A86A735BD14FBF743D9EB38B8010F&pass=5C0193A391CA91E5F2BEF0820D248F52&entype=1&;
+
+Test_Suite_Name = 'Login'
+Test_Case = 'Login_登录名或密码错误';
+'Login_登录名或密码错误' -api=usercenter-gateway/api/v1/login?;
+'Login_登录名或密码错误' -parameter&username=15967126679&password=123478&;
+
+Test_Suite_Name = 'Login'
+Test_Case = 'login_用户不存在';
+'login_用户不存在' -api=usercenter-gateway/api/v1/login?;
+'login_用户不存在' -parameter&username=15967126079&password=123478&;
+
+Test_Suite_Name = 'Login'
+Test_Case = 'login_登录成功';
+'login_登录成功' -api=usercenter-gateway/api/v1/login?;
+'login_登录成功' -parameter&username=15967126679&password=12346&;
