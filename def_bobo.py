@@ -226,24 +226,25 @@ def test_report(f1, lst1, lst2):
     n2 = len(lst2)
     if n1 == n2:
         n = n1
-        #print "n:", n
-        count = 0 
         for i in range(n):
             if lst1[i] != lst2[i]:
                 print lst1[i], lst2[i]
                 s = re.search('result/(.*).txt', f1)
                 s = s.group(1)
                 s = str(s).strip("'[]'")
-                #print s, type(s)
                 print s+" failed."+"Because the list1 and list2 are different."
-                #tm = def_bobo.GetNowTime()
-                #r = def_bobo.path('Test_Report')
-                #r = r.strip("''") + '/'+'Test_report.txt'
                 fhand= open(r,'a')
                 fhand.write(s+'-failed. Because the list1 and list2 are different.'+'-*'+tm+'*-'"\n")
                 fhand.close()
-                #print 'count:', count
-    else:
+             elif lst1[i] == lst2[i]:
+                s = re.search('result/(.*).txt', f1)
+                s = s.group(1)
+                s = str(s).strip("'[]'")
+                fhand= open(r,'a')
+                fhand.write(s+'-passed'+'-*'+tm+'*-'+"\n")
+                fhand.close()
+        print s+"-passed."
+    elif n1 != n2:
         s = re.search('result/(.*).txt', f1)
         s = s.group(1)
         s = str(s).strip("'[]'")
@@ -253,16 +254,6 @@ def test_report(f1, lst1, lst2):
         fhand= open(r,'a')
         fhand.write(s+' failed. because the len(list) is different'+'-*'+tm+'*-'+"\n"+error+"\n")
         fhand.close()
-    s = re.search('result/(.*).txt', f1)
-    s = s.group(1)
-    s = str(s).strip("'[]'")
-    print s+"-passed."
-    #tm = def_bobo.GetNowTime()
-    #r = def_bobo.path('Test_Report')
-    #r = r.strip("''") + '/'+'Test_report.txt'
-    fhand= open(r,'a')
-    fhand.write(s+'-passed'+'-*'+tm+'*-'+"\n")
-    fhand.close()
     return
 
 def test_and_report():
@@ -286,4 +277,30 @@ def test_and_report():
     return
 
 def GetNowTime():
-    return time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))    
+    return time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))
+    
+def test_one_case(ts):
+    #传入测试测试用例名称，执行单挑测试用例
+    configuration = def_bobo.path('configuration').strip("'")
+    fhand = open(configuration)
+    ffile = fhand.read()
+    #ts = raw_input("Enter the name of test case: ")
+    print "ts:", ts
+    url = def_bobo.url(ts, configuration)
+    print "url:", url
+    Test_Result_Path = def_bobo.path("Test_Result_Path").strip("'")
+    actual_result_filename = Test_Result_Path+'/'+ts+'.txt'
+    response= def_bobo.get_request_json_response(url)
+    def_bobo.result(actual_result_filename, ts, url)    
+    def_bobo.list_result(actual_result_filename, ts, url)
+    fhand.close()
+    test_result_file_path = def_bobo.path("Test_Result").strip("'")
+    expected_result_file_path = def_bobo.path("Expected_Result").strip("'")
+    f1 = expected_result_file_path+'/'+ts+'.txt'
+    #print f1
+    f2 = test_result_file_path+'/'+ts+'.txt'
+    #print f2
+    (lst1, lst2) = def_bobo.result_list(f1, f2)
+    def_bobo.test_report(f1, lst1, lst2)
+    return
+    
